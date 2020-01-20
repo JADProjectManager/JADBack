@@ -22,10 +22,21 @@
   "dependencies": {
     "@nestjs/common": "^6.7.2",
     "@nestjs/core": "^6.7.2",
+    "@nestjs/mongoose": "^6.2.1",
     "@nestjs/platform-express": "^6.7.2",
+    "@nestjs/typeorm": "^6.2.0",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/jsonwebtoken": "^8.3.5",
+    "bcryptjs": "^2.4.3",
+    "class-transformer": "^0.2.3",
+    "class-validator": "^0.11.0",
+    "dotenv": "^8.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.8.9",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.0",
-    "rxjs": "^6.5.3"
+    "rxjs": "^6.5.3",
+    "underscore": "^1.9.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^6.9.0",
