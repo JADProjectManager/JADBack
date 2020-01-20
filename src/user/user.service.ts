@@ -30,15 +30,20 @@ export class UserService {
     }
     
     async register (data: UserDTO): Promise <UserRO> {
-        const {username, password} = data;
+        const {username, password, email, name} = data;
         let user = await this.UserModel.findOne ({where: {username}});
 
         if (user) {
             throw new HttpException ('Username already exists', HttpStatus.BAD_REQUEST);
         }
 
-        user = await new this.UserModel(data);
-        await user.save();
+        user = await new this.UserModel({username, password, email, name});
+       
+        try {
+            await user.save();
+        } catch (error) {
+            throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+        }
 
         return user.toResponseObject(true)
     }

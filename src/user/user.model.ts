@@ -9,19 +9,30 @@ import * as _ from 'underscore';
 /**
  * Getter
  */
-var escapeProperty = function(value) {
+
+const escapeProperty = (value: string): string  => {
     return _.escape(value);
 };
 
+const passwordIsNotEmpty = (password) => {
+    return (password && password.length)
+};
 
 export const UserSchema = new mongoose.Schema({
     username: {
         type: String,
-       unique: true,
-       get: escapeProperty
+        unique: true,
+        get: escapeProperty
     },
-    hashed_password: String,
+    hashed_password: {
+        type: String,
+        validate: [passwordIsNotEmpty, 'Password cannot be empty']
+    },
     name: String,
+    email: {
+        type: String,
+        unique: true
+    },    
     created: { type: Date, default: Date.now },
     updated: { type: Date, default: Date.now },
 });
@@ -42,6 +53,10 @@ UserSchema.pre("save", function (next) {
     if (user._password === undefined) {
         return next();
     }
+
+    //Refresh the updated date
+    user.updated = new Date();
+
     bcrypt.genSalt(10, function (err, salt) {
         if (err) console.log(err);
         // hash the password using our new salt
@@ -58,10 +73,9 @@ UserSchema.methods.comparePassword = async function (attemptedPassword: string) 
 }
 
 UserSchema.methods.toResponseObject = function (showToken: boolean): UserRO {
-    const {id, username, created, updated} = this;
+    const {id, username, email, created, updated} = this;
     
-
-    let responseObject: any = {id , username, created, updated};
+    let responseObject: any = {id , username, email, created, updated};
 
     if (showToken) {
         let token = this.token();
@@ -81,12 +95,11 @@ UserSchema.methods.token = function () {
     {expiresIn: '7d'});
 };
 
-
-
 export interface User {
     username: string;
     name: string;
     password: string;
+    email: string;
     created: Date;
     updated: Date;
 }
