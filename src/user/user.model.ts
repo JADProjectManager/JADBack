@@ -77,6 +77,7 @@ UserSchema.methods.toResponseObject = function (showToken: boolean): UserRO {
     
     let responseObject: any = {id , username, name, email, created, updated};
 
+
     if (showToken) {
         let token = this.token();
         responseObject =  {...responseObject, token };
