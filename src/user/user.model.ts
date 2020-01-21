@@ -73,9 +73,9 @@ UserSchema.methods.comparePassword = async function (attemptedPassword: string) 
 }
 
 UserSchema.methods.toResponseObject = function (showToken: boolean): UserRO {
-    const {id, username, email, created, updated} = this;
+    const {id, username, email, name,  created, updated} = this;
     
-    let responseObject: any = {id , username, email, created, updated};
+    let responseObject: any = {id , username, name, email, created, updated};
 
     if (showToken) {
         let token = this.token();
