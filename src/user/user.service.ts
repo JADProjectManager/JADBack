@@ -65,32 +65,20 @@ export class UserService {
 
     async update (id: string, data: Partial<UserUpdatableDTO>): Promise <UserRO> {
         
-        try {
-            let user = await this.UserModel.findById (id);
-
+        try{ 
+            const {email, name} = data;
+            const user = await this.UserModel.findByIdAndUpdate(
+                {_id: id}, 
+                {email, name}, 
+                {new: true, omitUndefined: true});
+            
             if (!user) {
                 throw new HttpException ('User doesn\'t', HttpStatus.BAD_REQUEST);
             }
-    
-            //Filter which fields can be updated
-            if (data.name) {
-                user.name = data.name;
-            }
-    
-            if (data.email) {
-                user.email = data.email;
-            }
-    
-            try{ //Lets be a little more specific with the save errors output
-                await user.save();
-            } catch (error) {
-                throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-            }
-    
+
             return user.toResponseObject(true)
-        
         } catch (error) {
-            throw new HttpException('Invalid Request', HttpStatus.BAD_REQUEST)
+            throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
         }
         
     }
@@ -98,7 +86,6 @@ export class UserService {
     async delete (id: string): Promise <any> {
         try { 
             let user = await this.UserModel.findById (id);
-            console.log ("user", user);
             await user.remove();
             return {deleted: true};
         } catch (error) {

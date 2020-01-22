@@ -22,11 +22,11 @@ export class UserController {
     @UsePipes (new ValidationPipe())
     @UseGuards(new AuthGuard()) 
     changePassword (@User('id') userId: string, @Body() data) {
-        const {oldpassword, newpassword, newpasswordrepeated} = data;
+        const {oldPassword, newPassword, newPasswordRepeated} = data;
         
-        if (userId && oldpassword && newpassword && newpasswordrepeated) {
-            if (newpassword === newpasswordrepeated){
-                return this.userService.changePassword(userId,oldpassword,newpassword);
+        if (userId && oldPassword && newPassword && newPasswordRepeated) {
+            if (newPassword === newPasswordRepeated){
+                return this.userService.changePassword(userId,oldPassword, newPassword);
             } else {
                 throw new HttpException ('Password and Repeated Password are not the same', HttpStatus.BAD_REQUEST);
             }
