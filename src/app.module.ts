@@ -15,7 +15,8 @@ const MONGODB_URL = process.env.MONGODB_URL || 'mongodb://localhost/nest';
       uri: 'mongodb://localhost/nest',
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      useCreateIndex: true
+      useCreateIndex: true,
+      useFindAndModify: false
     })
   }),
   UserModule
