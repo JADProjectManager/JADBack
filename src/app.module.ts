@@ -10,17 +10,7 @@ import 'dotenv/config';
 const MONGODB_URL = process.env.MONGODB_URL || 'mongodb://localhost/nest';
 
 @Module({
-  imports: [MongooseModule.forRootAsync({
-    useFactory: () => ({
-      uri: 'mongodb://localhost/nest',
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-      useFindAndModify: false
-    })
-  }),
-  UserModule
-  ],
+  imports: [UserModule],
   controllers: [AppController],
   providers: [AppService],
 })

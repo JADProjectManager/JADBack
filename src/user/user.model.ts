@@ -35,6 +35,7 @@ export const UserSchema = new mongoose.Schema({
     },    
     created: { type: Date, default: Date.now },
     updated: { type: Date, default: Date.now },
+    roles: [String]
 });
 
   
@@ -73,9 +74,9 @@ UserSchema.methods.comparePassword = async function (attemptedPassword: string) 
 }
 
 UserSchema.methods.toResponseObject = function (showToken: boolean): UserRO {
-    const {id, username, email, name,  created, updated} = this;
+    const {id, username, email, name, created, updated, roles} = this;
     
-    let responseObject: any = {id , username, name, email, created, updated};
+    let responseObject: any = {id, username, name, email, created, updated, roles};
 
 
     if (showToken) {
@@ -87,10 +88,11 @@ UserSchema.methods.toResponseObject = function (showToken: boolean): UserRO {
 };
 
 UserSchema.methods.token = function () {
-    const {id, username} = this;
+    const {id, username, roles} = this;
     return jwt.sign ({
         id,
-        username
+        username,
+        roles
     },
     process.env.SECRET,
     {expiresIn: '7d'});
