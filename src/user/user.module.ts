@@ -8,12 +8,16 @@ import { UserService } from './user.service';
 import { UserSchema} from './user.model';
 import { roles } from './user.roles';
 
+import 'dotenv/config';
+
+const MONGODB_URL = process.env.MONGODB_URL || 'mongodb://localhost/nest';
+
 
 @Module({
   imports: [ 
     MongooseModule.forRootAsync({
       useFactory: () => ({
-        uri: 'mongodb://localhost/nest',
+        uri: MONGODB_URL,
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useCreateIndex: true,
