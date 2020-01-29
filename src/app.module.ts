@@ -5,9 +5,6 @@ import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from './user/user.module';
 
-import 'dotenv/config';
-
-const MONGODB_URL = process.env.MONGODB_URL || 'mongodb://localhost/nest';
 
 @Module({
   imports: [UserModule],
