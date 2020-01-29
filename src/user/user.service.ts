@@ -46,13 +46,15 @@ export class UserService {
     
     async create (data: UserDTO): Promise <UserRO> {
         const {username, password, email, name} = data;
+        const roles: string[] = ["BASIC_USER"];
+
         let user = await this.UserModel.findOne ({where: {username}});
 
         if (user) {
             throw new HttpException ('Username already exists', HttpStatus.BAD_REQUEST);
         }
 
-        user = await new this.UserModel({username, password, email, name});
+        user = await new this.UserModel({username, password, email, name, roles});
        
         try {
             await user.save();
@@ -93,10 +95,10 @@ export class UserService {
         }
     }
 
-    async changePassword(userId: string, oldPassowrd: string, newPassword: string): Promise <UserRO> {
+    async changePassword(userId: string, checkOldPassword: boolean, newPassword: string, oldPassowrd?: string): Promise <UserRO> {
         const user = await this.UserModel.findById (userId);
 
-        if (!user || !await user.comparePassword(oldPassowrd)) {
+        if  (!user || (checkOldPassword && !await user.comparePassword(oldPassowrd))) {
             throw new HttpException ('Invalid Username or password', HttpStatus.BAD_REQUEST);
         } else {
             user.password = newPassword;
@@ -108,4 +110,41 @@ export class UserService {
             }
         }
     }
+
+    async grantRole (userId: string, roleId: string): Promise <UserDTO> {
+        const user = await this.UserModel.findById (userId);
+
+        if (!user) {
+            throw new HttpException ('Invalid user', HttpStatus.BAD_REQUEST);
+        } else {
+            let roles: string [] = user.roles.filter (role => {return role !== roleId})
+            roles.push (roleId);
+            user.roles = roles;
+            try {
+                await user.save();
+                return user.toResponseObject(true);
+            } catch (error) {
+                throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+            }
+        }
+    }
+
+    async revokeRole (userId: string, roleId): Promise <UserDTO> {
+        const user = await this.UserModel.findById (userId);
+
+        if (!user) {
+            throw new HttpException ('Invalid user', HttpStatus.BAD_REQUEST);
+        } else {
+            const roles: string [] = user.roles.filter (role => {return role !== roleId})
+            user.roles = roles;
+            try {
+                await user.save();
+                return user.toResponseObject(true);
+            } catch (error) {
+                throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+            }
+        }
+    }
+
+
 }
