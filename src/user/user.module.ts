@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, Logger, Injectable } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AccessControlModule } from 'nest-access-control';
 
@@ -31,5 +31,15 @@ const MONGODB_URL = process.env.MONGODB_URL || 'mongodb://localhost/nest';
   providers: [UserService]
 })
 
-export class UserModule {}
+export class UserModule {
+
+  constructor(private readonly userService: UserService) {
+    const deployAdmin = process.env.CREATE_DEFAULT_DATA;
+    
+    if (deployAdmin) {
+      this.userService.createDefaultData();
+    }
+  }
+
+}
  

@@ -1,4 +1,4 @@
-import { Injectable, UsePipes, HttpException, HttpStatus, Logger } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './user.model';
@@ -143,6 +143,28 @@ export class UserService {
             } catch (error) {
                 throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
             }
+        }
+    }
+
+    async createDefaultData () {
+        let user = await this.UserModel.findOne ({username: 'admin'}).exec();
+      
+        if (!user) {
+            const roles: string[] = ["USERS_ADMINISTRATOR"];
+
+            user = await new this.UserModel({ 
+                username:'admin', 
+                password: 'admin', 
+                email: 'admin@example.com', 
+                name: 'The admin', 
+                roles});
+       
+            try {
+                await user.save();
+                Logger.log ('Admin User has been created: admin');
+            } catch (error) {
+                Logger.error ('Error creating the admin user');
+            } 
         }
     }
 
