@@ -31,6 +31,21 @@ export class UserService {
 
     }
 
+    async getUserByUsername(username: string) {
+        try {
+            let user = await this.UserModel.findOne({username});
+           
+            if (!user) {
+                throw new HttpException ('User doesn\'t', HttpStatus.BAD_REQUEST);
+            }
+            return user.toResponseObject(false);
+
+        } catch (error) {
+            throw new HttpException('Invalid Request', HttpStatus.BAD_REQUEST)
+        }
+    }
+
+
     async login (data: UserCredentialsDTO): Promise <UserRO> {
         const {username, password} = data;
         const user = await this.UserModel.findOne ({username: username}).exec();
