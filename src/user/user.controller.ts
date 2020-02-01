@@ -13,13 +13,13 @@ export class UserController {
 
     }
 
-    @Post('login')
+    @Post('api/auth/login')
     @UsePipes (new ValidationPipe())
     login (@Body() data: UserCredentialsDTO){
         return this.userService.login(data);
     }
 
-    @Post('changePassword')
+    @Post('api/auth/changePassword')
     @UsePipes (new ValidationPipe())
     @UseGuards(new AuthJWTGuard()) 
     changePassword (@User('id') userId: string, @Body() data) {
