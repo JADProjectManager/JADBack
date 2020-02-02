@@ -1,4 +1,4 @@
-## Description
+## Description [![Actions Status](https://github.com/JADProjectManager/JADBack/workflows/Docker%20Image%20CI/badge.svg)](https://github.com/JADProjectManager/JADBack/actions)
 
 JAD Project Manager Backend is the backend server for the JAD Project Manager web application. It uses NestJS, MongoDB, Jest, and other technologies to offer an API service.
 
