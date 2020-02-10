@@ -126,7 +126,7 @@ export class UserService {
         }
     }
 
-    async grantRole (userId: string, roleId: string): Promise <UserDTO> {
+    async grantRole (userId: string, roleId: string): Promise <UserRO> {
         const user = await this.UserModel.findById (userId);
 
         if (!user) {
@@ -144,7 +144,7 @@ export class UserService {
         }
     }
 
-    async revokeRole (userId: string, roleId): Promise <UserDTO> {
+    async revokeRole (userId: string, roleId): Promise <UserRO> {
         const user = await this.UserModel.findById (userId);
 
         if (!user) {

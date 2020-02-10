@@ -70,16 +70,15 @@ export class UserController {
     @UsePipes (new ValidationPipe())
     @UseGuards(new AuthJWTGuard(), ACGuard) 
     @UseRoles({ resource: 'users', action: 'update', possession: 'any'}) 
-    changeUserPassword(@Param('id') userId, @Body() data){
+    changeUserPassword(@Param('id') userId, @Body() data) {
         const {newPassword, newPasswordRepeated} = data;
         
         if (userId && newPassword && newPasswordRepeated) {
-            if (newPassword === newPasswordRepeated){
+            if (newPassword === newPasswordRepeated) {
                 return this.userService.changePassword(userId, false, newPassword);
             } else {
                 throw new HttpException ('Password and Repeated Password are not the same', HttpStatus.BAD_REQUEST);
             }
-
         } else{
             throw new HttpException ('Some data is missign', HttpStatus.BAD_REQUEST);
         }
