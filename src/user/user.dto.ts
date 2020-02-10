@@ -51,4 +51,6 @@ export class UserRO {
     name: string;
     created: Date;
     updated: Date;
+    roles: string [];
+    token?: string;
 }

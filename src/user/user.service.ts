@@ -31,6 +31,21 @@ export class UserService {
 
     }
 
+    async getUserByUsername(username: string) {
+        try {
+            let user = await this.UserModel.findOne({username});
+           
+            if (!user) {
+                throw new HttpException ('User doesn\'t', HttpStatus.BAD_REQUEST);
+            }
+            return user.toResponseObject(false);
+
+        } catch (error) {
+            throw new HttpException('Invalid Request', HttpStatus.BAD_REQUEST)
+        }
+    }
+
+
     async login (data: UserCredentialsDTO): Promise <UserRO> {
         const {username, password} = data;
         const user = await this.UserModel.findOne ({username: username}).exec();
@@ -111,7 +126,7 @@ export class UserService {
         }
     }
 
-    async grantRole (userId: string, roleId: string): Promise <UserDTO> {
+    async grantRole (userId: string, roleId: string): Promise <UserRO> {
         const user = await this.UserModel.findById (userId);
 
         if (!user) {
@@ -129,7 +144,7 @@ export class UserService {
         }
     }
 
-    async revokeRole (userId: string, roleId): Promise <UserDTO> {
+    async revokeRole (userId: string, roleId): Promise <UserRO> {
         const user = await this.UserModel.findById (userId);
 
         if (!user) {

@@ -28,7 +28,7 @@ const MONGODB_URL = process.env.MONGODB_URL || 'mongodb://localhost/nest';
     AccessControlModule.forRoles(roles)
   ],
   controllers: [UserController],
-  providers: [UserService]
+  providers: [UserService],
 })
 
 export class UserModule {
