@@ -33,7 +33,7 @@ export class UserService {
 
     async getUserByUsername(username: string) {
         try {
-            let user = await this.UserModel.findOne({username});
+            let user = await this.UserModel.findOne({username}).exec();
            
             if (!user) {
                 throw new HttpException ('User doesn\'t', HttpStatus.BAD_REQUEST);
