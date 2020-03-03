@@ -34,6 +34,7 @@ describe('UserService', () => {
       const user: UserRO = await userService.getUserByUsername ('test');
       
       if (user) {
+        console.log ("borra");
         await userService.delete (user.id);
       }
 
@@ -56,6 +57,7 @@ describe('UserService', () => {
 
     const createdUser: UserRO = await userService.create(user);
     testUserId = createdUser.id;
+    console.log ('The test User id', testUserId);
     expect.assertions(5);
 
     expect(createdUser.username).toEqual('test');

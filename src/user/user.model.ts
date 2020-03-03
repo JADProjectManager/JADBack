@@ -1,4 +1,4 @@
-import {} from '@nestjs/common'
+import { HttpException, HttpStatus } from '@nestjs/common'
 import  * as bcrypt from 'bcryptjs';
 import  * as jwt from 'jsonwebtoken';
 import { UserRO } from './user.dto';
@@ -59,7 +59,10 @@ UserSchema.pre("save", function (next) {
     user.updated = new Date();
 
     bcrypt.genSalt(10, function (err, salt) {
-        if (err) console.log(err);
+        if (err) {
+            console.log(err);
+            throw new HttpException ('Error Saving', HttpStatus.BAD_REQUEST);
+        }
         // hash the password using our new salt
         bcrypt.hash(user._password, salt, function (err, hash) {
             if (err) console.log(err);

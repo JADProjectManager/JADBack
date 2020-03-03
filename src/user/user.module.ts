@@ -6,26 +6,18 @@ import { AccessControlModule } from 'nest-access-control';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { UserSchema} from './user.model';
-import { roles } from './user.roles';
 
 import 'dotenv/config';
+import { AuthzModule } from 'src/authz/authz.module';
+import { loadRoles } from './user.roles';
 
 const MONGODB_URL = process.env.MONGODB_URL || 'mongodb://localhost/nest';
 
 
 @Module({
   imports: [ 
-    MongooseModule.forRootAsync({
-      useFactory: () => ({
-        uri: MONGODB_URL,
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useCreateIndex: true,
-        useFindAndModify: false
-      })
-    }),
     MongooseModule.forFeature([{name: 'User',schema: UserSchema}]),
-    AccessControlModule.forRoles(roles)
+    AuthzModule.forRoot (loadRoles)
   ],
   controllers: [UserController],
   providers: [UserService],
@@ -35,7 +27,7 @@ export class UserModule {
 
   constructor(private readonly userService: UserService) {
     const deployAdmin = process.env.CREATE_DEFAULT_DATA;
-    
+
     if (deployAdmin) {
       this.userService.createDefaultData();
     }
