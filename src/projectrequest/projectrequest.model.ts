@@ -3,6 +3,7 @@ import 'dotenv/config';
 import * as _ from 'underscore';
 import { UserRO } from 'src/user/user.dto';
 import { GroupRO } from 'src/group/group.dto';
+import { FileUploadRO } from 'src/fileupload/fileupload.dto';
 
 export const ProjectRequestSchema = new mongoose.Schema({
     
@@ -35,9 +36,12 @@ export const ProjectRequestSchema = new mongoose.Schema({
     additionalInformation: String,
     affectedDepartments: String,
     benefitedMemberGroups: String,
-
     neededIntegrations: String,
     
+    attachedFiles: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'FileUpload'
+    }],
 
     created: { type: Date, default: Date.now },
     updated: { type: Date, default: Date.now },
@@ -84,6 +88,9 @@ export interface ProjectRequest {
     affectedDepartments: string,
     benefitedMemberGroups: string,
     neededIntegrations: string,
+
+    attachedFiles: [FileUploadRO];
+
     created: Date;
     updated: Date;
     createdby: UserRO;

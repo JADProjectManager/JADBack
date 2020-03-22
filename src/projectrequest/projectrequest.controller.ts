@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, UsePipes, UseGuards, Put, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Get, Body, UsePipes, UseGuards, Put, Param, Delete, HttpException, HttpStatus, Response } from '@nestjs/common';
 import { UseRoles, ACGuard, UserRoles } from 'nest-access-control';
 import { ProjectRequestService } from './projectrequest.service';
 import { ProjectRequestDTO, ProjectRequestUpdatableDTO } from './projectrequest.dto';
@@ -6,24 +6,28 @@ import { ValidationPipe } from 'src/shared/validation.pipe';
 import { AuthJWTGuard } from 'src/shared/authJWT.guard';
 import { User } from 'src/user/user.decorator';
 import * as _ from 'underscore';
+import { Http2ServerResponse } from 'http2';
+import { FileUploadService } from 'src/fileupload/fileupload.service';
+import { FileUploadRO } from 'src/fileupload/fileupload.dto';
 
 
 @Controller('/api/projectrequest')
 export class ProjectRequestController {
 
-    constructor (private projectRequestService: ProjectRequestService) {
+    constructor (private projectRequestService: ProjectRequestService,
+                 private fileUploadService: FileUploadService) {
 
     }
   
     @Get()
     @UseGuards(new AuthJWTGuard()) 
-    showAllUsers() {
+    showAllProjectRequests() {
         return this.projectRequestService.showAllProjectRequests();
     }
 
     @Get('/:id')
     @UseGuards(new AuthJWTGuard()) 
-    getUser(@Param('id') id: string) {
+    getProjectRequest(@Param('id') id: string) {
         return this.projectRequestService.getProjectRequest(id);
     }
 
@@ -62,4 +66,31 @@ export class ProjectRequestController {
         }
     }
 
+    //Download the attached File
+    @Get('/:id/file/:fileId')
+    @UseGuards(new AuthJWTGuard(), ACGuard) 
+    @UseRoles({resource: 'projectrequest', action: 'read', possession: 'own'})
+    async readFile(@Param('id') id: string, @Param('fileId') fileId: string,  
+                    @UserRoles() userRoles: any,  @User('id') userId: string,
+                    @Response() res) {
+        const projectRequest = await this.projectRequestService.getProjectRequest(id);
+        
+        //Write a condition to grant access to the file
+    
+        let found = false;
+        for (let attachedFile in projectRequest.attachedFiles ){
+           if (projectRequest.attachedFiles[attachedFile].valueOf() == fileId) {
+               found = true;
+           }
+        }
+
+
+        if (found){
+            this.fileUploadService.sendFile (fileId,res);
+        } else {
+            console.log ('nonono');
+            throw new HttpException ('File not found',HttpStatus.NOT_FOUND);
+        }
+
+    }
 }

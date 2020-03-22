@@ -3,6 +3,7 @@ import { ApiProperty } from '@nestjs/swagger'
 import { UserRO } from 'src/user/user.dto';
 import { GroupRO } from "src/group/group.dto";
 import { ProjectRequest } from "./projectrequest.model";
+import { FileUploadRO } from "src/fileupload/fileupload.dto";
 
 export class ProjectRequestDTO{
 
@@ -65,6 +66,11 @@ export class ProjectRequestDTO{
     @ApiProperty()
     @IsNotEmpty()
     neededIntegrations: string;
+
+    @ApiProperty()
+    @IsOptional()
+    attachedFiles?: [Partial<FileUploadRO>];
+
 }
 
 export type ProjectRequestUpdatableDTO = Partial<ProjectRequestDTO>;
@@ -87,6 +93,8 @@ export class ProjectRequestRO implements ProjectRequest{
     affectedDepartments: string;
     benefitedMemberGroups: string;
     neededIntegrations: string;
+
+    attachedFiles: [FileUploadRO];
     created: Date;
     updated: Date;
     createdby: UserRO;

@@ -39,7 +39,7 @@ export class ProjectRequestService {
         const { name, unit, functionalManagerName,
                 functionalManager, sponsor, need, desiredFeatures,
                 notDoingConsequences, strategicGoals, strategicGoalsExplanation,
-                additionalInformation, affectedDepartments, benefitedMemberGroups,
+                additionalInformation, attachedFiles, affectedDepartments, benefitedMemberGroups,
                 neededIntegrations } = data;
   
 
@@ -48,7 +48,7 @@ export class ProjectRequestService {
         let projectRequest = await new this.projectRequestModel({name, unit, functionalManagerName,
             functionalManager, sponsor, need, desiredFeatures,
             notDoingConsequences, strategicGoals, strategicGoalsExplanation,
-            additionalInformation, affectedDepartments, benefitedMemberGroups,
+            additionalInformation, attachedFiles,  affectedDepartments, benefitedMemberGroups,
             neededIntegrations, "applicant": userId, "createdby": userId, "updatedby": userId });
     
         try {
@@ -64,7 +64,7 @@ export class ProjectRequestService {
         const { name, unit, functionalManagerName, applicant,
             functionalManager, sponsor, need, desiredFeatures,
             notDoingConsequences, strategicGoals, strategicGoalsExplanation,
-            additionalInformation, affectedDepartments, benefitedMemberGroups,
+            additionalInformation, attachedFiles, affectedDepartments, benefitedMemberGroups,
             neededIntegrations } = data;
 
         try{ 
@@ -73,7 +73,7 @@ export class ProjectRequestService {
                 {name, unit, functionalManagerName, applicant,
                     functionalManager, sponsor, need, desiredFeatures,
                     notDoingConsequences, strategicGoals, strategicGoalsExplanation,
-                    additionalInformation, affectedDepartments, benefitedMemberGroups,
+                    additionalInformation, attachedFiles, affectedDepartments, benefitedMemberGroups,
                     neededIntegrations, "updatedby": userId }, 
                 {new: true, omitUndefined: true});
             
